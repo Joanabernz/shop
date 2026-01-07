@@ -4,13 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopping Cart</title>
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
     <div id="root"></div>
+    
+    <!-- Load libraries in correct order -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
     <script type="text/babel">
         const { useState } = React;
         const { ShoppingCart, Plus, Minus, Trash2, Wallet, Building2, ArrowLeft, CheckCircle } = lucide;
@@ -79,196 +83,153 @@
           };
 
           if (page === 'success') {
-            return (
-              <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
-                <div className="bg-white rounded-lg shadow-md p-8 max-w-md w-full text-center">
-                  <CheckCircle size={64} className="text-green-600 mx-auto mb-4" />
-                  <h1 className="text-3xl font-bold text-gray-800 mb-2">Payment Successful!</h1>
-                  <p className="text-gray-600 mb-4">Thank you for your purchase.</p>
-                  <p className="text-sm text-gray-500">Redirecting to shop...</p>
-                </div>
-              </div>
+            return React.createElement('div', { className: "min-h-screen bg-gray-100 flex items-center justify-center px-4" },
+              React.createElement('div', { className: "bg-white rounded-lg shadow-md p-8 max-w-md w-full text-center" },
+                React.createElement(CheckCircle, { size: 64, className: "text-green-600 mx-auto mb-4" }),
+                React.createElement('h1', { className: "text-3xl font-bold text-gray-800 mb-2" }, "Payment Successful!"),
+                React.createElement('p', { className: "text-gray-600 mb-4" }, "Thank you for your purchase."),
+                React.createElement('p', { className: "text-sm text-gray-500" }, "Redirecting to shop...")
+              )
             );
           }
 
           if (page === 'payment') {
-            return (
-              <div className="min-h-screen bg-gray-100 py-8 px-4">
-                <div className="max-w-2xl mx-auto">
-                  <div className="bg-white rounded-lg shadow-md p-6">
-                    <button
-                      onClick={() => setPage('shop')}
-                      className="flex items-center gap-2 text-gray-600 hover:text-gray-800 mb-6 transition"
-                    >
-                      <ArrowLeft size={20} />
-                      Back to Cart
-                    </button>
-
-                    <h1 className="text-3xl font-bold text-gray-800 mb-6">Choose Payment Method</h1>
-
-                    <div className="space-y-4 mb-6">
-                      <button
-                        onClick={() => setSelectedPayment('ewallet')}
-                        className={`w-full p-6 rounded-lg border-2 transition flex items-center gap-4 ${
-                          selectedPayment === 'ewallet'
-                            ? 'border-blue-600 bg-blue-50'
-                            : 'border-gray-300 hover:border-blue-400'
-                        }`}
-                      >
-                        <Wallet size={32} className={selectedPayment === 'ewallet' ? 'text-blue-600' : 'text-gray-600'} />
-                        <div className="text-left">
-                          <h3 className="font-semibold text-gray-800 text-lg">E-Wallet</h3>
-                          <p className="text-sm text-gray-600">Pay with digital wallet (PayPal, GCash, PayMaya)</p>
-                        </div>
-                      </button>
-
-                      <button
-                        onClick={() => setSelectedPayment('bank')}
-                        className={`w-full p-6 rounded-lg border-2 transition flex items-center gap-4 ${
-                          selectedPayment === 'bank'
-                            ? 'border-blue-600 bg-blue-50'
-                            : 'border-gray-300 hover:border-blue-400'
-                        }`}
-                      >
-                        <Building2 size={32} className={selectedPayment === 'bank' ? 'text-blue-600' : 'text-gray-600'} />
-                        <div className="text-left">
-                          <h3 className="font-semibold text-gray-800 text-lg">Bank Transfer</h3>
-                          <p className="text-sm text-gray-600">Direct bank transfer or online banking</p>
-                        </div>
-                      </button>
-                    </div>
-
-                    <div className="border-t pt-6">
-                      <div className="flex justify-between items-center mb-6">
-                        <span className="text-lg font-semibold text-gray-700">Order Total:</span>
-                        <span className="text-2xl font-bold text-green-600">${getTotal()}</span>
-                      </div>
-
-                      <button
-                        onClick={handlePayment}
-                        disabled={!selectedPayment}
-                        className={`w-full py-3 rounded-lg font-semibold transition ${
-                          selectedPayment
-                            ? 'bg-green-600 text-white hover:bg-green-700'
-                            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                        }`}
-                      >
-                        {selectedPayment ? 'Confirm Payment' : 'Select a Payment Method'}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            return React.createElement('div', { className: "min-h-screen bg-gray-100 py-8 px-4" },
+              React.createElement('div', { className: "max-w-2xl mx-auto" },
+                React.createElement('div', { className: "bg-white rounded-lg shadow-md p-6" },
+                  React.createElement('button', { 
+                    onClick: () => setPage('shop'),
+                    className: "flex items-center gap-2 text-gray-600 hover:text-gray-800 mb-6 transition"
+                  },
+                    React.createElement(ArrowLeft, { size: 20 }),
+                    "Back to Cart"
+                  ),
+                  React.createElement('h1', { className: "text-3xl font-bold text-gray-800 mb-6" }, "Choose Payment Method"),
+                  React.createElement('div', { className: "space-y-4 mb-6" },
+                    React.createElement('button', {
+                      onClick: () => setSelectedPayment('ewallet'),
+                      className: `w-full p-6 rounded-lg border-2 transition flex items-center gap-4 ${selectedPayment === 'ewallet' ? 'border-blue-600 bg-blue-50' : 'border-gray-300 hover:border-blue-400'}`
+                    },
+                      React.createElement(Wallet, { size: 32, className: selectedPayment === 'ewallet' ? 'text-blue-600' : 'text-gray-600' }),
+                      React.createElement('div', { className: "text-left" },
+                        React.createElement('h3', { className: "font-semibold text-gray-800 text-lg" }, "E-Wallet"),
+                        React.createElement('p', { className: "text-sm text-gray-600" }, "Pay with digital wallet (PayPal, GCash, PayMaya)")
+                      )
+                    ),
+                    React.createElement('button', {
+                      onClick: () => setSelectedPayment('bank'),
+                      className: `w-full p-6 rounded-lg border-2 transition flex items-center gap-4 ${selectedPayment === 'bank' ? 'border-blue-600 bg-blue-50' : 'border-gray-300 hover:border-blue-400'}`
+                    },
+                      React.createElement(Building2, { size: 32, className: selectedPayment === 'bank' ? 'text-blue-600' : 'text-gray-600' }),
+                      React.createElement('div', { className: "text-left" },
+                        React.createElement('h3', { className: "font-semibold text-gray-800 text-lg" }, "Bank Transfer"),
+                        React.createElement('p', { className: "text-sm text-gray-600" }, "Direct bank transfer or online banking")
+                      )
+                    )
+                  ),
+                  React.createElement('div', { className: "border-t pt-6" },
+                    React.createElement('div', { className: "flex justify-between items-center mb-6" },
+                      React.createElement('span', { className: "text-lg font-semibold text-gray-700" }, "Order Total:"),
+                      React.createElement('span', { className: "text-2xl font-bold text-green-600" }, `$${getTotal()}`)
+                    ),
+                    React.createElement('button', {
+                      onClick: handlePayment,
+                      disabled: !selectedPayment,
+                      className: `w-full py-3 rounded-lg font-semibold transition ${selectedPayment ? 'bg-green-600 text-white hover:bg-green-700' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`
+                    }, selectedPayment ? 'Confirm Payment' : 'Select a Payment Method')
+                  )
+                )
+              )
             );
           }
 
-          return (
-            <div className="min-h-screen bg-gray-100 py-8 px-4">
-              <div className="max-w-6xl mx-auto">
-                <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-                  <div className="flex items-center justify-between mb-6">
-                    <h1 className="text-3xl font-bold text-gray-800">Electronics Store</h1>
-                    <div className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg">
-                      <ShoppingCart size={24} />
-                      <span className="font-semibold">{getItemCount()} items</span>
-                    </div>
-                  </div>
-
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div>
-                      <h2 className="text-xl font-semibold mb-4 text-gray-700">Products</h2>
-                      <div className="space-y-3">
-                        {products.map(product => (
-                          <div key={product.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
-                            <div>
-                              <h3 className="font-medium text-gray-800">{product.name}</h3>
-                              <p className="text-green-600 font-semibold">${product.price.toFixed(2)}</p>
-                            </div>
-                            <button
-                              onClick={() => addToCart(product)}
-                              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition flex items-center gap-2"
-                            >
-                              <Plus size={16} />
-                              Add
-                            </button>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div>
-                      <h2 className="text-xl font-semibold mb-4 text-gray-700">Shopping Cart</h2>
-                      {cart.length === 0 ? (
-                        <div className="text-center py-12 bg-gray-50 rounded-lg">
-                          <ShoppingCart size={48} className="mx-auto text-gray-400 mb-3" />
-                          <p className="text-gray-500">Your cart is empty</p>
-                        </div>
-                      ) : (
-                        <div className="space-y-3">
-                          {cart.map(item => (
-                            <div key={item.id} className="p-4 bg-gray-50 rounded-lg">
-                              <div className="flex items-center justify-between mb-3">
-                                <div>
-                                  <h3 className="font-medium text-gray-800">{item.name}</h3>
-                                  <p className="text-sm text-gray-600">${item.price.toFixed(2)} each</p>
-                                </div>
-                                <button
-                                  onClick={() => removeFromCart(item.id)}
-                                  className="text-red-600 hover:text-red-700 transition"
-                                >
-                                  <Trash2 size={20} />
-                                </button>
-                              </div>
-                              <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-3">
-                                  <button
-                                    onClick={() => updateQuantity(item.id, -1)}
-                                    className="bg-gray-300 hover:bg-gray-400 text-gray-800 w-8 h-8 rounded flex items-center justify-center transition"
-                                  >
-                                    <Minus size={16} />
-                                  </button>
-                                  <span className="font-semibold text-gray-800 w-8 text-center">{item.quantity}</span>
-                                  <button
-                                    onClick={() => updateQuantity(item.id, 1)}
-                                    className="bg-gray-300 hover:bg-gray-400 text-gray-800 w-8 h-8 rounded flex items-center justify-center transition"
-                                  >
-                                    <Plus size={16} />
-                                  </button>
-                                </div>
-                                <p className="font-semibold text-gray-800">
-                                  ${(item.price * item.quantity).toFixed(2)}
-                                </p>
-                              </div>
-                            </div>
-                          ))}
-
-                          <div className="border-t-2 border-gray-300 pt-4 mt-4">
-                            <div className="flex items-center justify-between mb-4">
-                              <span className="text-xl font-bold text-gray-800">Total:</span>
-                              <span className="text-2xl font-bold text-green-600">${getTotal()}</span>
-                            </div>
-                            <button 
-                              onClick={handleCheckout}
-                              className="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition font-semibold"
-                            >
-                              Checkout
-                            </button>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+          return React.createElement('div', { className: "min-h-screen bg-gray-100 py-8 px-4" },
+            React.createElement('div', { className: "max-w-6xl mx-auto" },
+              React.createElement('div', { className: "bg-white rounded-lg shadow-md p-6 mb-8" },
+                React.createElement('div', { className: "flex items-center justify-between mb-6" },
+                  React.createElement('h1', { className: "text-3xl font-bold text-gray-800" }, "Electronics Store"),
+                  React.createElement('div', { className: "flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg" },
+                    React.createElement(ShoppingCart, { size: 24 }),
+                    React.createElement('span', { className: "font-semibold" }, `${getItemCount()} items`)
+                  )
+                ),
+                React.createElement('div', { className: "grid md:grid-cols-2 gap-6" },
+                  React.createElement('div', null,
+                    React.createElement('h2', { className: "text-xl font-semibold mb-4 text-gray-700" }, "Products"),
+                    React.createElement('div', { className: "space-y-3" },
+                      products.map(product =>
+                        React.createElement('div', { key: product.id, className: "flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition" },
+                          React.createElement('div', null,
+                            React.createElement('h3', { className: "font-medium text-gray-800" }, product.name),
+                            React.createElement('p', { className: "text-green-600 font-semibold" }, `$${product.price.toFixed(2)}`)
+                          ),
+                          React.createElement('button', {
+                            onClick: () => addToCart(product),
+                            className: "bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition flex items-center gap-2"
+                          },
+                            React.createElement(Plus, { size: 16 }),
+                            "Add"
+                          )
+                        )
+                      )
+                    )
+                  ),
+                  React.createElement('div', null,
+                    React.createElement('h2', { className: "text-xl font-semibold mb-4 text-gray-700" }, "Shopping Cart"),
+                    cart.length === 0 
+                      ? React.createElement('div', { className: "text-center py-12 bg-gray-50 rounded-lg" },
+                          React.createElement(ShoppingCart, { size: 48, className: "mx-auto text-gray-400 mb-3" }),
+                          React.createElement('p', { className: "text-gray-500" }, "Your cart is empty")
+                        )
+                      : React.createElement('div', { className: "space-y-3" },
+                          cart.map(item =>
+                            React.createElement('div', { key: item.id, className: "p-4 bg-gray-50 rounded-lg" },
+                              React.createElement('div', { className: "flex items-center justify-between mb-3" },
+                                React.createElement('div', null,
+                                  React.createElement('h3', { className: "font-medium text-gray-800" }, item.name),
+                                  React.createElement('p', { className: "text-sm text-gray-600" }, `$${item.price.toFixed(2)} each`)
+                                ),
+                                React.createElement('button', {
+                                  onClick: () => removeFromCart(item.id),
+                                  className: "text-red-600 hover:text-red-700 transition"
+                                }, React.createElement(Trash2, { size: 20 }))
+                              ),
+                              React.createElement('div', { className: "flex items-center justify-between" },
+                                React.createElement('div', { className: "flex items-center gap-3" },
+                                  React.createElement('button', {
+                                    onClick: () => updateQuantity(item.id, -1),
+                                    className: "bg-gray-300 hover:bg-gray-400 text-gray-800 w-8 h-8 rounded flex items-center justify-center transition"
+                                  }, React.createElement(Minus, { size: 16 })),
+                                  React.createElement('span', { className: "font-semibold text-gray-800 w-8 text-center" }, item.quantity),
+                                  React.createElement('button', {
+                                    onClick: () => updateQuantity(item.id, 1),
+                                    className: "bg-gray-300 hover:bg-gray-400 text-gray-800 w-8 h-8 rounded flex items-center justify-center transition"
+                                  }, React.createElement(Plus, { size: 16 }))
+                                ),
+                                React.createElement('p', { className: "font-semibold text-gray-800" }, `$${(item.price * item.quantity).toFixed(2)}`)
+                              )
+                            )
+                          ),
+                          React.createElement('div', { className: "border-t-2 border-gray-300 pt-4 mt-4" },
+                            React.createElement('div', { className: "flex items-center justify-between mb-4" },
+                              React.createElement('span', { className: "text-xl font-bold text-gray-800" }, "Total:"),
+                              React.createElement('span', { className: "text-2xl font-bold text-green-600" }, `$${getTotal()}`)
+                            ),
+                            React.createElement('button', {
+                              onClick: handleCheckout,
+                              className: "w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition font-semibold"
+                            }, "Checkout")
+                          )
+                        )
+                  )
+                )
+              )
+            )
           );
         }
 
-        ReactDOM.render(<ShoppingCartApp />, document.getElementById('root'));
-    </script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script>
-        lucide.createIcons();
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(React.createElement(ShoppingCartApp));
     </script>
 </body>
 </html>
