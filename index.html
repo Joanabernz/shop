@@ -6,230 +6,249 @@
     <title>Shopping Cart</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <div id="root"></div>
-    
-    <!-- Load libraries in correct order -->
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    
-    <script type="text/babel">
-        const { useState } = React;
-        const { ShoppingCart, Plus, Minus, Trash2, Wallet, Building2, ArrowLeft, CheckCircle } = lucide;
+<body class="bg-gray-100">
+    <div id="app"></div>
 
-        function ShoppingCartApp() {
-          const [products] = useState([
+    <script>
+        // Product data
+        const products = [
             { id: 1, name: 'Laptop', price: 999.99 },
             { id: 2, name: 'Mouse', price: 29.99 },
             { id: 3, name: 'Keyboard', price: 79.99 },
             { id: 4, name: 'Monitor', price: 299.99 },
-            { id: 5, name: 'Headphones', price: 149.99 },
-          ]);
+            { id: 5, name: 'Headphones', price: 149.99 }
+        ];
 
-          const [cart, setCart] = useState([]);
-          const [page, setPage] = useState('shop');
-          const [selectedPayment, setSelectedPayment] = useState('');
+        let cart = [];
+        let currentPage = 'shop';
+        let selectedPayment = '';
 
-          const addToCart = (product) => {
-            const existing = cart.find(item => item.id === product.id);
-            if (existing) {
-              setCart(cart.map(item =>
-                item.id === product.id
-                  ? { ...item, quantity: item.quantity + 1 }
-                  : item
-              ));
-            } else {
-              setCart([...cart, { ...product, quantity: 1 }]);
-            }
-          };
-
-          const updateQuantity = (id, change) => {
-            setCart(cart.map(item =>
-              item.id === id
-                ? { ...item, quantity: Math.max(0, item.quantity + change) }
-                : item
-            ).filter(item => item.quantity > 0));
-          };
-
-          const removeFromCart = (id) => {
-            setCart(cart.filter(item => item.id !== id));
-          };
-
-          const getTotal = () => {
+        // Helper functions
+        function getTotal() {
             return cart.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2);
-          };
-
-          const getItemCount = () => {
-            return cart.reduce((sum, item) => sum + item.quantity, 0);
-          };
-
-          const handleCheckout = () => {
-            if (cart.length > 0) {
-              setPage('payment');
-            }
-          };
-
-          const handlePayment = () => {
-            if (selectedPayment) {
-              setPage('success');
-              setTimeout(() => {
-                setCart([]);
-                setSelectedPayment('');
-                setPage('shop');
-              }, 3000);
-            }
-          };
-
-          if (page === 'success') {
-            return React.createElement('div', { className: "min-h-screen bg-gray-100 flex items-center justify-center px-4" },
-              React.createElement('div', { className: "bg-white rounded-lg shadow-md p-8 max-w-md w-full text-center" },
-                React.createElement(CheckCircle, { size: 64, className: "text-green-600 mx-auto mb-4" }),
-                React.createElement('h1', { className: "text-3xl font-bold text-gray-800 mb-2" }, "Payment Successful!"),
-                React.createElement('p', { className: "text-gray-600 mb-4" }, "Thank you for your purchase."),
-                React.createElement('p', { className: "text-sm text-gray-500" }, "Redirecting to shop...")
-              )
-            );
-          }
-
-          if (page === 'payment') {
-            return React.createElement('div', { className: "min-h-screen bg-gray-100 py-8 px-4" },
-              React.createElement('div', { className: "max-w-2xl mx-auto" },
-                React.createElement('div', { className: "bg-white rounded-lg shadow-md p-6" },
-                  React.createElement('button', { 
-                    onClick: () => setPage('shop'),
-                    className: "flex items-center gap-2 text-gray-600 hover:text-gray-800 mb-6 transition"
-                  },
-                    React.createElement(ArrowLeft, { size: 20 }),
-                    "Back to Cart"
-                  ),
-                  React.createElement('h1', { className: "text-3xl font-bold text-gray-800 mb-6" }, "Choose Payment Method"),
-                  React.createElement('div', { className: "space-y-4 mb-6" },
-                    React.createElement('button', {
-                      onClick: () => setSelectedPayment('ewallet'),
-                      className: `w-full p-6 rounded-lg border-2 transition flex items-center gap-4 ${selectedPayment === 'ewallet' ? 'border-blue-600 bg-blue-50' : 'border-gray-300 hover:border-blue-400'}`
-                    },
-                      React.createElement(Wallet, { size: 32, className: selectedPayment === 'ewallet' ? 'text-blue-600' : 'text-gray-600' }),
-                      React.createElement('div', { className: "text-left" },
-                        React.createElement('h3', { className: "font-semibold text-gray-800 text-lg" }, "E-Wallet"),
-                        React.createElement('p', { className: "text-sm text-gray-600" }, "Pay with digital wallet (PayPal, GCash, PayMaya)")
-                      )
-                    ),
-                    React.createElement('button', {
-                      onClick: () => setSelectedPayment('bank'),
-                      className: `w-full p-6 rounded-lg border-2 transition flex items-center gap-4 ${selectedPayment === 'bank' ? 'border-blue-600 bg-blue-50' : 'border-gray-300 hover:border-blue-400'}`
-                    },
-                      React.createElement(Building2, { size: 32, className: selectedPayment === 'bank' ? 'text-blue-600' : 'text-gray-600' }),
-                      React.createElement('div', { className: "text-left" },
-                        React.createElement('h3', { className: "font-semibold text-gray-800 text-lg" }, "Bank Transfer"),
-                        React.createElement('p', { className: "text-sm text-gray-600" }, "Direct bank transfer or online banking")
-                      )
-                    )
-                  ),
-                  React.createElement('div', { className: "border-t pt-6" },
-                    React.createElement('div', { className: "flex justify-between items-center mb-6" },
-                      React.createElement('span', { className: "text-lg font-semibold text-gray-700" }, "Order Total:"),
-                      React.createElement('span', { className: "text-2xl font-bold text-green-600" }, `$${getTotal()}`)
-                    ),
-                    React.createElement('button', {
-                      onClick: handlePayment,
-                      disabled: !selectedPayment,
-                      className: `w-full py-3 rounded-lg font-semibold transition ${selectedPayment ? 'bg-green-600 text-white hover:bg-green-700' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`
-                    }, selectedPayment ? 'Confirm Payment' : 'Select a Payment Method')
-                  )
-                )
-              )
-            );
-          }
-
-          return React.createElement('div', { className: "min-h-screen bg-gray-100 py-8 px-4" },
-            React.createElement('div', { className: "max-w-6xl mx-auto" },
-              React.createElement('div', { className: "bg-white rounded-lg shadow-md p-6 mb-8" },
-                React.createElement('div', { className: "flex items-center justify-between mb-6" },
-                  React.createElement('h1', { className: "text-3xl font-bold text-gray-800" }, "Electronics Store"),
-                  React.createElement('div', { className: "flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg" },
-                    React.createElement(ShoppingCart, { size: 24 }),
-                    React.createElement('span', { className: "font-semibold" }, `${getItemCount()} items`)
-                  )
-                ),
-                React.createElement('div', { className: "grid md:grid-cols-2 gap-6" },
-                  React.createElement('div', null,
-                    React.createElement('h2', { className: "text-xl font-semibold mb-4 text-gray-700" }, "Products"),
-                    React.createElement('div', { className: "space-y-3" },
-                      products.map(product =>
-                        React.createElement('div', { key: product.id, className: "flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition" },
-                          React.createElement('div', null,
-                            React.createElement('h3', { className: "font-medium text-gray-800" }, product.name),
-                            React.createElement('p', { className: "text-green-600 font-semibold" }, `$${product.price.toFixed(2)}`)
-                          ),
-                          React.createElement('button', {
-                            onClick: () => addToCart(product),
-                            className: "bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition flex items-center gap-2"
-                          },
-                            React.createElement(Plus, { size: 16 }),
-                            "Add"
-                          )
-                        )
-                      )
-                    )
-                  ),
-                  React.createElement('div', null,
-                    React.createElement('h2', { className: "text-xl font-semibold mb-4 text-gray-700" }, "Shopping Cart"),
-                    cart.length === 0 
-                      ? React.createElement('div', { className: "text-center py-12 bg-gray-50 rounded-lg" },
-                          React.createElement(ShoppingCart, { size: 48, className: "mx-auto text-gray-400 mb-3" }),
-                          React.createElement('p', { className: "text-gray-500" }, "Your cart is empty")
-                        )
-                      : React.createElement('div', { className: "space-y-3" },
-                          cart.map(item =>
-                            React.createElement('div', { key: item.id, className: "p-4 bg-gray-50 rounded-lg" },
-                              React.createElement('div', { className: "flex items-center justify-between mb-3" },
-                                React.createElement('div', null,
-                                  React.createElement('h3', { className: "font-medium text-gray-800" }, item.name),
-                                  React.createElement('p', { className: "text-sm text-gray-600" }, `$${item.price.toFixed(2)} each`)
-                                ),
-                                React.createElement('button', {
-                                  onClick: () => removeFromCart(item.id),
-                                  className: "text-red-600 hover:text-red-700 transition"
-                                }, React.createElement(Trash2, { size: 20 }))
-                              ),
-                              React.createElement('div', { className: "flex items-center justify-between" },
-                                React.createElement('div', { className: "flex items-center gap-3" },
-                                  React.createElement('button', {
-                                    onClick: () => updateQuantity(item.id, -1),
-                                    className: "bg-gray-300 hover:bg-gray-400 text-gray-800 w-8 h-8 rounded flex items-center justify-center transition"
-                                  }, React.createElement(Minus, { size: 16 })),
-                                  React.createElement('span', { className: "font-semibold text-gray-800 w-8 text-center" }, item.quantity),
-                                  React.createElement('button', {
-                                    onClick: () => updateQuantity(item.id, 1),
-                                    className: "bg-gray-300 hover:bg-gray-400 text-gray-800 w-8 h-8 rounded flex items-center justify-center transition"
-                                  }, React.createElement(Plus, { size: 16 }))
-                                ),
-                                React.createElement('p', { className: "font-semibold text-gray-800" }, `$${(item.price * item.quantity).toFixed(2)}`)
-                              )
-                            )
-                          ),
-                          React.createElement('div', { className: "border-t-2 border-gray-300 pt-4 mt-4" },
-                            React.createElement('div', { className: "flex items-center justify-between mb-4" },
-                              React.createElement('span', { className: "text-xl font-bold text-gray-800" }, "Total:"),
-                              React.createElement('span', { className: "text-2xl font-bold text-green-600" }, `$${getTotal()}`)
-                            ),
-                            React.createElement('button', {
-                              onClick: handleCheckout,
-                              className: "w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition font-semibold"
-                            }, "Checkout")
-                          )
-                        )
-                  )
-                )
-              )
-            )
-          );
         }
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(React.createElement(ShoppingCartApp));
+        function getItemCount() {
+            return cart.reduce((sum, item) => sum + item.quantity, 0);
+        }
+
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            const existing = cart.find(item => item.id === productId);
+            
+            if (existing) {
+                existing.quantity++;
+            } else {
+                cart.push({ ...product, quantity: 1 });
+            }
+            render();
+        }
+
+        function updateQuantity(id, change) {
+            const item = cart.find(i => i.id === id);
+            if (item) {
+                item.quantity += change;
+                if (item.quantity <= 0) {
+                    cart = cart.filter(i => i.id !== id);
+                }
+            }
+            render();
+        }
+
+        function removeFromCart(id) {
+            cart = cart.filter(item => item.id !== id);
+            render();
+        }
+
+        function checkout() {
+            if (cart.length > 0) {
+                currentPage = 'payment';
+                render();
+            }
+        }
+
+        function selectPayment(method) {
+            selectedPayment = method;
+            render();
+        }
+
+        function confirmPayment() {
+            if (selectedPayment) {
+                currentPage = 'success';
+                render();
+                setTimeout(() => {
+                    cart = [];
+                    selectedPayment = '';
+                    currentPage = 'shop';
+                    render();
+                }, 3000);
+            }
+        }
+
+        function backToShop() {
+            currentPage = 'shop';
+            render();
+        }
+
+        // Render functions
+        function renderShop() {
+            return `
+                <div class="min-h-screen py-8 px-4">
+                    <div class="max-w-6xl mx-auto">
+                        <div class="bg-white rounded-lg shadow-md p-6">
+                            <div class="flex items-center justify-between mb-6">
+                                <h1 class="text-3xl font-bold text-gray-800">Electronics Store</h1>
+                                <div class="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+                                    <span class="font-semibold">${getItemCount()} items</span>
+                                </div>
+                            </div>
+
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <!-- Products -->
+                                <div>
+                                    <h2 class="text-xl font-semibold mb-4 text-gray-700">Products</h2>
+                                    <div class="space-y-3">
+                                        ${products.map(product => `
+                                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
+                                                <div>
+                                                    <h3 class="font-medium text-gray-800">${product.name}</h3>
+                                                    <p class="text-green-600 font-semibold">$${product.price.toFixed(2)}</p>
+                                                </div>
+                                                <button onclick="addToCart(${product.id})" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+                                                    Add
+                                                </button>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                </div>
+
+                                <!-- Cart -->
+                                <div>
+                                    <h2 class="text-xl font-semibold mb-4 text-gray-700">Shopping Cart</h2>
+                                    ${cart.length === 0 ? `
+                                        <div class="text-center py-12 bg-gray-50 rounded-lg">
+                                            <svg class="mx-auto text-gray-400 mb-3" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+                                            <p class="text-gray-500">Your cart is empty</p>
+                                        </div>
+                                    ` : `
+                                        <div class="space-y-3">
+                                            ${cart.map(item => `
+                                                <div class="p-4 bg-gray-50 rounded-lg">
+                                                    <div class="flex items-center justify-between mb-3">
+                                                        <div>
+                                                            <h3 class="font-medium text-gray-800">${item.name}</h3>
+                                                            <p class="text-sm text-gray-600">$${item.price.toFixed(2)} each</p>
+                                                        </div>
+                                                        <button onclick="removeFromCart(${item.id})" class="text-red-600 hover:text-red-700">
+                                                            ✕
+                                                        </button>
+                                                    </div>
+                                                    <div class="flex items-center justify-between">
+                                                        <div class="flex items-center gap-3">
+                                                            <button onclick="updateQuantity(${item.id}, -1)" class="bg-gray-300 hover:bg-gray-400 text-gray-800 w-8 h-8 rounded">
+                                                                −
+                                                            </button>
+                                                            <span class="font-semibold text-gray-800 w-8 text-center">${item.quantity}</span>
+                                                            <button onclick="updateQuantity(${item.id}, 1)" class="bg-gray-300 hover:bg-gray-400 text-gray-800 w-8 h-8 rounded">
+                                                                +
+                                                            </button>
+                                                        </div>
+                                                        <p class="font-semibold text-gray-800">$${(item.price * item.quantity).toFixed(2)}</p>
+                                                    </div>
+                                                </div>
+                                            `).join('')}
+                                            
+                                            <div class="border-t-2 border-gray-300 pt-4 mt-4">
+                                                <div class="flex items-center justify-between mb-4">
+                                                    <span class="text-xl font-bold text-gray-800">Total:</span>
+                                                    <span class="text-2xl font-bold text-green-600">$${getTotal()}</span>
+                                                </div>
+                                                <button onclick="checkout()" class="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition font-semibold">
+                                                    Checkout
+                                                </button>
+                                            </div>
+                                        </div>
+                                    `}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderPayment() {
+            return `
+                <div class="min-h-screen py-8 px-4">
+                    <div class="max-w-2xl mx-auto">
+                        <div class="bg-white rounded-lg shadow-md p-6">
+                            <button onclick="backToShop()" class="flex items-center gap-2 text-gray-600 hover:text-gray-800 mb-6">
+                                ← Back to Cart
+                            </button>
+
+                            <h1 class="text-3xl font-bold text-gray-800 mb-6">Choose Payment Method</h1>
+
+                            <div class="space-y-4 mb-6">
+                                <button onclick="selectPayment('ewallet')" class="w-full p-6 rounded-lg border-2 transition flex items-center gap-4 ${selectedPayment === 'ewallet' ? 'border-blue-600 bg-blue-50' : 'border-gray-300 hover:border-blue-400'}">
+                                    <span class="text-3xl">💳</span>
+                                    <div class="text-left">
+                                        <h3 class="font-semibold text-gray-800 text-lg">E-Wallet</h3>
+                                        <p class="text-sm text-gray-600">Pay with digital wallet (PayPal, GCash, PayMaya)</p>
+                                    </div>
+                                </button>
+
+                                <button onclick="selectPayment('bank')" class="w-full p-6 rounded-lg border-2 transition flex items-center gap-4 ${selectedPayment === 'bank' ? 'border-blue-600 bg-blue-50' : 'border-gray-300 hover:border-blue-400'}">
+                                    <span class="text-3xl">🏦</span>
+                                    <div class="text-left">
+                                        <h3 class="font-semibold text-gray-800 text-lg">Bank Transfer</h3>
+                                        <p class="text-sm text-gray-600">Direct bank transfer or online banking</p>
+                                    </div>
+                                </button>
+                            </div>
+
+                            <div class="border-t pt-6">
+                                <div class="flex justify-between items-center mb-6">
+                                    <span class="text-lg font-semibold text-gray-700">Order Total:</span>
+                                    <span class="text-2xl font-bold text-green-600">$${getTotal()}</span>
+                                </div>
+
+                                <button onclick="confirmPayment()" ${!selectedPayment ? 'disabled' : ''} class="w-full py-3 rounded-lg font-semibold transition ${selectedPayment ? 'bg-green-600 text-white hover:bg-green-700' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}">
+                                    ${selectedPayment ? 'Confirm Payment' : 'Select a Payment Method'}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderSuccess() {
+            return `
+                <div class="min-h-screen flex items-center justify-center px-4">
+                    <div class="bg-white rounded-lg shadow-md p-8 max-w-md w-full text-center">
+                        <div class="text-green-600 text-6xl mb-4">✓</div>
+                        <h1 class="text-3xl font-bold text-gray-800 mb-2">Payment Successful!</h1>
+                        <p class="text-gray-600 mb-4">Thank you for your purchase.</p>
+                        <p class="text-sm text-gray-500">Redirecting to shop...</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function render() {
+            const app = document.getElementById('app');
+            if (currentPage === 'shop') {
+                app.innerHTML = renderShop();
+            } else if (currentPage === 'payment') {
+                app.innerHTML = renderPayment();
+            } else if (currentPage === 'success') {
+                app.innerHTML = renderSuccess();
+            }
+        }
+
+        // Initial render
+        render();
     </script>
 </body>
 </html>
